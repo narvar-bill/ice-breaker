@@ -28,13 +28,26 @@ jobs:
         env:
           REPO: ${{ github.repository }}
         run: |
+          # Capture current branch (fallback to 'main' if HEAD/detached)
+          CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "main")
+          if [ "$CURRENT_BRANCH" = "HEAD" ] || [ -z "$CURRENT_BRANCH" ]; then
+            CURRENT_BRANCH="main"
+          fi
+
           # Check if gh-pages exists on remote; create an initial orphan branch if it doesn't.
           if ! git ls-remote --exit-code --heads origin gh-pages; then
             git checkout --orphan gh-pages
-            git rm -rf . || true
+
+            # Remove all tracked files only if any exist to avoid pathspec errors
+            if [ -n "$(git ls-files)" ]; then
+              git rm -rf .
+            fi
+
             git commit --allow-empty -m "Initialize gh-pages branch"
             git push origin gh-pages
-            git checkout -
+
+            # Return to the original branch explicitly (avoid `git checkout -` which can fail)
+            git checkout "$CURRENT_BRANCH"
           fi
 
       - name: Setup Node (optional)
