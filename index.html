@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎲 Daily Standup Icebreaker Roulette</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="app-header">
+            <h1 class="app-title">🎲 Daily Standup Icebreaker Roulette</h1>
+            <p class="app-subtitle">Click to discover your team's question of the day!</p>
+        </header>
+
+        <main class="app-main">
+            <div class="question-counter">
+                <span id="questionCounter">Ready to start!</span>
+            </div>
+
+            <div class="question-area" id="questionArea">
+                <div class="generate-section" id="generateSection">
+                    <button class="btn btn--primary btn-generate" id="generateBtn">
+                        <span class="btn-text">Generate Question</span>
+                        <div class="btn-spinner hidden" id="btnSpinner">🎲</div>
+                    </button>
+                </div>
+
+                <div class="question-display hidden" id="questionDisplay">
+                    <div class="category-badge" id="categoryBadge"></div>
+                    <div class="question-text" id="questionText"></div>
+                    <button class="btn btn--secondary btn-another" id="anotherBtn">Generate Another</button>
+                </div>
+            </div>
+
+            <div class="completion-celebration hidden" id="completionCelebration">
+                <h2>🎉 Congratulations! 🎉</h2>
+                <p>You've used all 100 icebreaker questions!</p>
+                <button class="btn btn--primary" id="resetBtn">Start Over</button>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <div class="instructions">
+                <h3>How to Use</h3>
+                <p>Perfect for daily standups, team meetings, or getting to know your colleagues! Click the button to get a random icebreaker question. Each question will only appear once until you've seen all 100.</p>
+            </div>
+        </footer>
+    </div>
+
+    <div class="confetti-container" id="confettiContainer"></div>
+    <script src="app.js"></script>
+</body>
+</html>
