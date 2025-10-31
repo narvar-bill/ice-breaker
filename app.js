@@ -1,6 +1,7 @@
 // Icebreaker Question Generator App
 class IcebreakerRoulette {
     constructor() {
+        this.STORAGE_KEY = 'icebreaker-used-questions';
         this.questions = [
             {"id": 1, "question": "What was your first job ever?", "category": "Personal & Background"},
             {"id": 2, "question": "What's your favorite family tradition?", "category": "Personal & Background"},
@@ -111,7 +112,43 @@ class IcebreakerRoulette {
     }
 
     init() {
+        this.loadProgress();
         this.bindEvents();
+        this.updateCounter();
+    }
+
+    loadProgress() {
+        try {
+            const saved = localStorage.getItem(this.STORAGE_KEY);
+            if (saved) {
+                const parsedData = JSON.parse(saved);
+                // Validate the saved data
+                if (Array.isArray(parsedData) && parsedData.every(id => typeof id === 'number')) {
+                    this.usedQuestions = parsedData;
+                    console.log(`Loaded ${this.usedQuestions.length} used questions from storage`);
+                }
+            }
+        } catch (error) {
+            console.error('Error loading progress from localStorage:', error);
+            // Reset to empty if there's an error
+            this.usedQuestions = [];
+        }
+    }
+
+    saveProgress() {
+        try {
+            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.usedQuestions));
+        } catch (error) {
+            console.error('Error saving progress to localStorage:', error);
+        }
+    }
+
+    clearProgress() {
+        try {
+            localStorage.removeItem(this.STORAGE_KEY);
+        } catch (error) {
+            console.error('Error clearing progress from localStorage:', error);
+        }
     }
 
     bindEvents() {
@@ -147,6 +184,9 @@ class IcebreakerRoulette {
         
         // Mark question as used
         this.usedQuestions.push(this.currentQuestion.id);
+        
+        // Save progress to localStorage
+        this.saveProgress();
 
         // Show the question
         this.displayQuestion();
@@ -225,6 +265,9 @@ class IcebreakerRoulette {
     resetApp() {
         this.usedQuestions = [];
         this.currentQuestion = null;
+        
+        // Clear localStorage
+        this.clearProgress();
 
         // Reset UI
         const generateSection = document.getElementById('generateSection');
